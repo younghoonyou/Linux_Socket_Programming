@@ -3,7 +3,7 @@
 #include <string.h>
 #include <unistd.h>//file manage header
 #include <arpa/inet.h>
-#include <sys/socekt.h>//socket programming lib
+#include <sys/socket.h>//socket programming lib
 
 void Error_handle(char *err_msg){//Error function
 	fputs(err_msg,stderr);
@@ -22,11 +22,11 @@ int main(){
 	char ip[] = "127.0.0.1";//local
 	int port = 10000;
 	//Create Server Socket TCP/IP Protocal
-	server_socket = socket(PF_INET,SOCKET_STREAM,0);
+	server_socket = socket(PF_INET,SOCK_STREAM,0);
 	if(server_socket == -1) Error_handle("Socket Error!");//when error occured
 
 	memset(&server_addr,0,sizeof(server_addr));//init
-	server_addr.sin_faily = AF_INET;//TCP/IP protocal
+	server_addr.sin_family = AF_INET;//TCP/IP protocal
 	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);//IP addr 4bytes structure
 	server_addr.sin_port = htons(port);//port number
 
@@ -39,8 +39,8 @@ int main(){
 	if(Listen_ret == -1) Error_handle("listen Error!");
 
 	//Accept for structure and function
-	int Client_addr_size = sizeof(client_addr);
-	int Accept_ret = accept(server_socket,(struct sockaddr*) &client_addr,&Client_addr_size);
+	unsigned int Client_addr_size = sizeof(client_addr);
+	int Accept_ret = accept(server_socket,(struct sockaddr*) &client_addr, &Client_addr_size);
 	if(Accept_ret == -1) Error_handle("Accept Error!");
 
 	//send msg , contain rec msg string data
