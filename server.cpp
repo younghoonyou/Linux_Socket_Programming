@@ -33,4 +33,8 @@ int main(){
 	//bind allocate server socket addr
 	int Bind_ret = bind(server_socket,(struct sockaddr*) &server_addr,sizeof(server_addr));
 	if(Bind_ret == -1) Error_handle("Bind Error!");
+
+	//for listen wait clinet request
+	int Listen_ret = listen(server_socket,10);
+	if(Listen_ret == -1) Error_handle("listen Error!");
 }
