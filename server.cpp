@@ -37,4 +37,10 @@ int main(){
 	//for listen wait clinet request
 	int Listen_ret = listen(server_socket,10);
 	if(Listen_ret == -1) Error_handle("listen Error!");
+
+	//Accept for structure and function
+	int Client_addr_size = sizeof(client_addr);
+	int Accept_ret = accept(server_socket,(struct sockaddr*) &client_addr,&Client_addr_size);
+	if(Accept_ret == -1) Error_handle("Accept Error!");
+
 }
