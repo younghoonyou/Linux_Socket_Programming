@@ -46,6 +46,6 @@ int main(){
 	//send msg receive msg for string data
 	write(client_socket,Sendmsg,sizeof(Sendmsg));
 	int Read_strlen = read(client_socket,Recmsg,sizeof(Recmsg) - 1);//'\0'
-
+	close(client_socket);
 	return 0;
 }
