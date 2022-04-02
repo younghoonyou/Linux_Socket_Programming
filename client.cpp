@@ -28,7 +28,7 @@ int main(){
 	int port = 10000;
 
 	//create Client Socket TCP/IP protocal
-	client_socket = socket(PE_INET,SOCK_STREAM,0);//IPv4 , TCP : SOCK_STREAM , protocal
+	client_socket = socket(PF_INET,SOCK_STREAM,0);//IPv4 , TCP : SOCK_STREAM , protocal
 	if(server_socket == -1) Error_handle(Socket_Err);
 
 	//Init to bind
@@ -42,6 +42,10 @@ int main(){
 	//socekt description , casting to sockaddr structure -> to request Server addr info should be same as server
 	
 	if(Connect == -1) Error_handle(Connect_err);
+	
+	//send msg receive msg for string data
+	write(client_socket,Sendmsg,sizeof(Sendmsg));
+	int Read_strlen = read(client_socket,Recmsg,sizeof(Recmsg) - 1);//'\0'
 
 	return 0;
 }
