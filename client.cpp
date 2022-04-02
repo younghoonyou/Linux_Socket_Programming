@@ -31,5 +31,17 @@ int main(){
 	client_socket = socket(PE_INET,SOCK_STREAM,0);//IPv4 , TCP : SOCK_STREAM , protocal
 	if(server_socket == -1) Error_handle(Socket_Err);
 
+	//Init to bind
+	memset(&Server_addr,0,sizeof(Server_addr));
+	Server_addr.sin_family = AF_INET;//Address Family IPv4 Internet Protocal
+	Server_addr.sin_addr.s_addr = inet_addr(ip);//IP addr
+	Server_addr.sin_port = htons(port);//Host to network short - short 2bytes integer
+
+	//connet to request server socket
+	int Connect = connect(client_socket,(struct sockaddr*) &Server_addr,sizeof(Server_addr));
+	//socekt description , casting to sockaddr structure -> to request Server addr info should be same as server
+	
+	if(Connect == -1) Error_handle(Connect_err);
+
 	return 0;
 }
