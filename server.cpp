@@ -27,7 +27,7 @@ int main(){
 	//Create Server Socket TCP/IP Protocal
 	server_socket = socket(PF_INET,SOCK_STREAM,0);
 	if(server_socket == -1) Error_handle(Socket_Err);//when error occured
-
+	else printf("Create Server Socket\n");
 	memset(&server_addr,0,sizeof(server_addr));//init
 	server_addr.sin_family = AF_INET;//TCP/IP protocal
 	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);//IP addr 4bytes structure
@@ -36,20 +36,20 @@ int main(){
 	//bind allocate server socket addr
 	int Bind_ret = bind(server_socket,(struct sockaddr*) &server_addr,sizeof(server_addr));
 	if(Bind_ret == -1) Error_handle(Bind_Err);
-
+	else printf("Bind Server Socket\n");
 	//for listen wait clinet request
 	int Listen_ret = listen(server_socket,10);
 	if(Listen_ret == -1) Error_handle(Listen_Err);
-
+	else printf("Listen Server Socket\n");
 	//Accept for structure and function
 	unsigned int Client_addr_size = sizeof(client_addr);
 	int Accept_ret = accept(server_socket,(struct sockaddr*) &client_addr, &Client_addr_size);
 	if(Accept_ret == -1) Error_handle(Accept_Err);
-
+	else printf("Accept!!\n");
 	//send msg , contain rec msg string data
 	write(client_socket,Sendmsg,sizeof(Sendmsg));
 	int Read_strlen = read(client_socket,Recmsg,sizeof(Recmsg) - 1);//'\0'
-
+	printf("Server Read %d\n",Read_strlen);
 	//Close socket file
 	close(client_socket);
 	close(server_socket);

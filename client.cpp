@@ -4,8 +4,8 @@
 #include <unistd.h>//file manage function header
 #include <arpa/inet.h>
 #include <sys/socket.h>//socket programming function decalre
-void Error_handle(char *Error_msg){
-	fupts(Error_msg,stderr);
+void Error_handle(const char *Error_msg){
+	fputs(Error_msg,stderr);
 	fputc('\n',stderr);
 	exit(1);
 }
@@ -17,7 +17,7 @@ int main(){
 	int client_socket;
 
 	//structure variable decalre
-	struct socakddr_in Server_addr;
+	struct sockaddr_in Server_addr;
 
 	//message
 	char Sendmsg[] = "Test Client";
@@ -29,8 +29,8 @@ int main(){
 
 	//create Client Socket TCP/IP protocal
 	client_socket = socket(PF_INET,SOCK_STREAM,0);//IPv4 , TCP : SOCK_STREAM , protocal
-	if(server_socket == -1) Error_handle(Socket_Err);
-
+	if(client_socket == -1) Error_handle(Socket_Err);
+	else printf("Create Client Socket\n");
 	//Init to bind
 	memset(&Server_addr,0,sizeof(Server_addr));
 	Server_addr.sin_family = AF_INET;//Address Family IPv4 Internet Protocal
@@ -41,11 +41,12 @@ int main(){
 	int Connect = connect(client_socket,(struct sockaddr*) &Server_addr,sizeof(Server_addr));
 	//socekt description , casting to sockaddr structure -> to request Server addr info should be same as server
 	
-	if(Connect == -1) Error_handle(Connect_err);
-	
+	if(Connect == -1) Error_handle(Connect_Err);
+	else printf("Connect!\n");
 	//send msg receive msg for string data
 	write(client_socket,Sendmsg,sizeof(Sendmsg));
 	int Read_strlen = read(client_socket,Recmsg,sizeof(Recmsg) - 1);//'\0'
+	printf("Read Socket %d\n",Read_strlen);
 	close(client_socket);
 	return 0;
 }
