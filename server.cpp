@@ -43,4 +43,8 @@ int main(){
 	int Accept_ret = accept(server_socket,(struct sockaddr*) &client_addr,&Client_addr_size);
 	if(Accept_ret == -1) Error_handle("Accept Error!");
 
+	//send msg , contain rec msg string data
+	write(client_socket,Sendmsg,sizeof(Sendmsg));
+	int Read_strlen = read(client_socket,Recmsg,sizeof(Recmsg) - 1);//'\0'
+
 }
