@@ -15,7 +15,7 @@ int main(){
 	int server_socket,client_socket;
 	//declare structure variable
 	struct sockaddr_in server_addr;
-	struct sockaddr_int client_addr;
+	struct sockaddr_in client_addr;
 
 	char Sendmsg[] = "Hello Hoon";
 	char Recmsg[1024];
@@ -25,4 +25,12 @@ int main(){
 	server_socket = socket(PF_INET,SOCKET_STREAM,0);
 	if(server_socket == -1) Error_handle("Socket Error!");//when error occured
 
+	memset(&server_addr,0,sizeof(server_addr));//init
+	server_addr.sin_faily = AF_INET;//TCP/IP protocal
+	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);//IP addr 4bytes structure
+	server_addr.sin_port = htons(port);//port number
+
+	//bind allocate server socket addr
+	int Bind_ret = bind(server_socket,(struct sockaddr*) &server_addr,sizeof(server_addr));
+	if(Bind_ret == -1) Error_handle("Bind Error!");
 }
