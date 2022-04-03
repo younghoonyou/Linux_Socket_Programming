@@ -11,7 +11,7 @@ void Error_handle(const char *Error_msg){
 }
 const char *Socket_Err = "Socket Error!";
 const char *Connect_Err = "Connect Error!";
-
+const char *Stop = "stop";
 int main(){
 	//Client Socket description variable declare
 	int client_socket;
@@ -20,7 +20,7 @@ int main(){
 	struct sockaddr_in Server_addr;
 
 	//message
-	char Sendmsg[] = "Test Client";
+	char Sendmsg[] = "Hello Server";
 	char Recmsg[1024];
 
 	//IP/Port
@@ -42,11 +42,24 @@ int main(){
 	//socekt description , casting to sockaddr structure -> to request Server addr info should be same as server
 	
 	if(Connect == -1) Error_handle(Connect_Err);
-	else printf("Connect!\n");
+	else{ printf("Connect!\n");
+	//	while(1){
+		//	printf("1");
+	//		scanf("%s",Sendmsg);
+	//		if(strcmp(Sendmsg,Stop) == 0) break;
+	//		write(client_socket,Sendmsg,sizeof(Sendmsg));
+	//		int Read_strlen = read(client_socket,Recmsg,sizeof(Recmsg) - 1);
+	//		printf("%d\n",Read_strlen);
+	//	}
+	//	printf("2");
+	}
+//	printf("3");
 	//send msg receive msg for string data
-	write(client_socket,Sendmsg,sizeof(Sendmsg));
+	//write(client_socket,Sendmsg,sizeof(Sendmsg));
 	int Read_strlen = read(client_socket,Recmsg,sizeof(Recmsg) - 1);//'\0'
-	printf("Read Socket %d\n",Read_strlen);
+	if(Read_strlen != -1) printf("server : %s\n",Recmsg);
+	write(client_socket,Sendmsg,sizeof(Sendmsg));
+	//printf("Read Socket %d\n",Read_strlen);
 	close(client_socket);
 	return 0;
 }

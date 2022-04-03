@@ -45,11 +45,22 @@ int main(){
 	unsigned int Client_addr_size = sizeof(client_addr);
 	int Accept_ret = accept(server_socket,(struct sockaddr*) &client_addr, &Client_addr_size);
 	if(Accept_ret == -1) Error_handle(Accept_Err);
-	else printf("Accept!!\n");
+	else{
+		printf("Accept!!\n");
+	//	while(1){
+	//		int Read_strlen = read(client_socket,Recmsg,sizeof(Recmsg) - 1);
+	//		printf("%d\n",Read_strlen);
+	//		if(Read_strlen > 0) printf("%s\n",Recmsg);
+	//	}
+	}
+	//else printf("Accept!!\n");
 	//send msg , contain rec msg string data
 	write(client_socket,Sendmsg,sizeof(Sendmsg));
 	int Read_strlen = read(client_socket,Recmsg,sizeof(Recmsg) - 1);//'\0'
+	if(Read_strlen != -1) printf("client : %s\n",Recmsg);
+	//printf("%s\n",Recmsg);
 	printf("Server Read %d\n",Read_strlen);
+	//write(client_socket,Sendmsg,sizeof(Sendmsg));
 	//Close socket file
 	close(client_socket);
 	close(server_socket);
