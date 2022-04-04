@@ -1,16 +1,23 @@
 CC = g++#compiler
 
-CXXFLAGS = -Wall -02#compile option for C++ Wall(complie warning) 02(optimize level 2)
+CXXFLAGS = -Wall#compile option for C++ Wall(complie warning) 02(optimize level 2)
 
-OBJS = server.o
+OBJS1 = server.cpp
+OBJS2 = client.cpp
 
-TARGET = server.out
+all : server client
 
-$(TARGET) = $(OBJS)
-	$(CC) -o $@ $(OBJS)
+server : $(OBJS1)
+	$(CC) -o server $(OBJS1) -lpthread
 
-server.o : server.cpp
-	$(CC) $(CXXFLAGS) -c server.cpp
+client : $(OBJS2)
+	$(CC) -o client $(OBJS2) -lpthread
+
+#server.o : server.cpp
+#	$(CC) $(CXXFLAGS) -c server.cpp
+
+#client.o : client.cpp
+#	$(CC) $(CXXFLAGS) -c client.cpp
 
 clean:
-	rm -rf $(OBJS) test
+	rm *o $(all)
