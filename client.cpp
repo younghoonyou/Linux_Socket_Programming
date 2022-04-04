@@ -13,27 +13,23 @@ void Error_handle(const char *Error_msg){
 const char *Socket_Err = "Socket Error!";
 const char *Connect_Err = "Connect Error!";
 const char *Stop = "stop";
-struct rec_message{
-	int* socket;
-	char* message;
-};
 void* Send_function(void* sck){
 	int *socket = (int*)sck;
+  char message[30];
 	while(1){
-		char message[1024];
-		scanf("%s",message);
+    fgets(message,sizeof(char)*30,stdin);
 		write(*socket,message,sizeof(message));
 	}
 }
 
 void* Receive_function(void* sck){
-	rec_message* data = (rec_message*)sck;
-	char* msg = data->message;
+  int *socket = (int*)sck;
+  char message[30];
 	while(1){
-		//char message[1024];
-		int str_len = read(*(data->socket),msg,sizeof(msg));
+		int str_len = read(*socket,message,sizeof(char)*30);
+    if(str_len == 0) close(*socket);
 		if(str_len != -1){
-				printf("Server : %s\n",msg);
+				printf("Server : %s",message);
 		}
 	}
 }
@@ -47,11 +43,10 @@ int main(){
 	struct sockaddr_in Server_addr;
 
 	//message
-	//char Sendmsg[] = "Hello Server";
-	char Recmsg[1024];
+	char Recmsg[30];
 
 	//IP/Port
-	char ip[] = "127.0.0.1";
+	char ip[] = "172.16.95.128";
 	int port = 10000;
 	
 	//create Client Socket TCP/IP protocal
@@ -71,35 +66,15 @@ int main(){
 	if(Connect == -1) Error_handle(Connect_Err);
 	else printf("Connect!\n");
 
-	rec_message Rec_data;
-	Rec_data.message = Recmsg;
-	Rec_data.socket = &client_socket;
 	pthread_t p_thread[2];
 
 	int result;
 
 	pthread_create(&p_thread[0],NULL,Send_function,(void*)&client_socket);
-	pthread_create(&p_thread[1],NULL,Receive_function,(void*)&Rec_data);
+	pthread_create(&p_thread[1],NULL,Receive_function,(void*)&client_socket);
 
-	//	while(1){
-		//	printf("1");
-	//		scanf("%s",Sendmsg);
-	//		if(strcmp(Sendmsg,Stop) == 0) break;
-	//		write(client_socket,Sendmsg,sizeof(Sendmsg));
-	//		int Read_strlen = read(client_socket,Recmsg,sizeof(Recmsg) - 1);
-	//		printf("%d\n",Read_strlen);
-	//	}
-		printf("2");
 	pthread_join(p_thread[0],(void**)&result);
 	pthread_join(p_thread[1],(void**)&result);
-	//}
-	printf("3");
-	//send msg receive msg for string data
-	//write(client_socket,Sendmsg,sizeof(Sendmsg));
-	//int Read_strlen = read(client_socket,Recmsg,sizeof(Recmsg) - 1);//'\0'
-	//if(Read_strlen != -1) printf("server : %s\n",Recmsg);
-	//write(client_socket,Sendmsg,sizeof(Sendmsg));
-	//printf("Read Socket %d\n",Read_strlen);
 	close(client_socket);
 	return 0;
 }

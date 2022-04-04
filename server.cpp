@@ -9,10 +9,6 @@ const char *Socket_Err = "Socket Error!";
 const char *Bind_Err = "Bind Error!";
 const char *Listen_Err = "Listen Error!";
 const char *Accept_Err = "Accept Error!";
-struct rec_message{
-	int* socket;
-	char* message;
-};
 void Error_handle(const char *err_msg){//Error function
 	fputs(err_msg,stderr);
 	fputc('\n',stderr);
@@ -21,23 +17,23 @@ void Error_handle(const char *err_msg){//Error function
 
 void* Send_function(void* sck){//Pass function to thread as parameter
 		int *client_socket = (int*)sck;
+		char message[30];
 		while(1){
-				char message[30];
-				scanf("%[^\n]s",message);
+				fgets(message,sizeof(char)*30,stdin);
 				if(strcmp(message,"stop") == 0) break;
 				write(*client_socket,message,sizeof(message));//send message
 		}
 }
 
 void* Receive_function(void* sck){
-		rec_message* socket_ = (rec_message*)sck;
-		//char message[30];
-
+		char message[30];
+		int *socket = (int*)sck;
 		while(1){
-			int str_len = read(*(socket_->socket),socket_->message,sizeof(socket_->message));
+			//char message[30];
+			int str_len = read(*socket,message,sizeof(message));
+			if(str_len == 0) close(*socket);
 			if(str_len != -1){
-					printf("Client : %s\n",socket_->message);
-					str_len = 0;
+					printf("Client : %s",message);
 			}
 		}
 }
@@ -78,14 +74,11 @@ int main(){
 	else{
 		client_socket = Accept_ret;
 		printf("Accept!!\n");
-	rec_message Rec_data;
-	Rec_data.socket = &client_socket;
-	Rec_data.message = Recmsg;
 
 	int result;
 	pthread_t p_thread[2];
 	pthread_create(&p_thread[0],NULL,Send_function,(void*)&client_socket);
-	pthread_create(&p_thread[1],NULL,Receive_function,(void*)&Rec_data);
+	pthread_create(&p_thread[1],NULL,Receive_function,(void*)&client_socket);
 
 	pthread_join(p_thread[0],(void**)&result);
 	pthread_join(p_thread[1],(void**)&result);
